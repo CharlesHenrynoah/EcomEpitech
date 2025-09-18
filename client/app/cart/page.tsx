@@ -82,7 +82,7 @@ export default function CartPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/">
-                <Button size="lg" className="text-lg px-8">
+                <Button size="lg" className="text-lg px-8" style={{ backgroundColor: "#432ec6", color: "#ffffff" }}>
                   Découvrir la Collection
                 </Button>
               </Link>

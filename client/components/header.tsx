@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search, ShoppingCart, User, Menu, X, Heart } from "lucide-react"
 import { useCart } from "@/hooks/use-cart"
-import { CartDrawer } from "@/components/cart-drawer"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -15,32 +14,29 @@ export function Header() {
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full bg-gradient-to-br from-primary via-secondary to-accent animate-gradient-shift">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">S</span>
+            <div className="h-8 w-8 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <span className="text-white font-bold text-lg">S</span>
             </div>
-            <span className="font-bold text-xl">SneakerHub</span>
+            <span className="font-bold text-xl text-white">SneakStreet</span>
           </Link>
 
           {/* Navigation Desktop */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-foreground hover:text-primary transition-colors">
+            <Link href="/" className="text-white/90 hover:text-white transition-colors font-medium">
               Accueil
             </Link>
-            <Link href="/sneakers" className="text-foreground hover:text-primary transition-colors">
-              Sneakers
+            <Link href="/femme" className="text-white/90 hover:text-white transition-colors font-medium">
+              Femme
             </Link>
-            <Link href="/brands" className="text-foreground hover:text-primary transition-colors">
-              Marques
+            <Link href="/homme" className="text-white/90 hover:text-white transition-colors font-medium">
+              Homme
             </Link>
-            <Link href="/new" className="text-foreground hover:text-primary transition-colors">
-              Nouveautés
-            </Link>
-            <Link href="/sale" className="text-foreground hover:text-primary transition-colors">
+            <Link href="/promotions" className="text-white/90 hover:text-white transition-colors font-medium">
               Promotions
             </Link>
           </nav>
@@ -49,18 +45,21 @@ export function Header() {
           <div className="hidden lg:flex items-center space-x-2 flex-1 max-w-md mx-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input placeholder="Rechercher des sneakers..." className="pl-10" />
+              <Input
+                placeholder="Rechercher des sneakers..."
+                className="pl-10 bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/70"
+              />
             </div>
           </div>
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="hidden md:flex">
+            <Button variant="ghost" size="icon" className="hidden md:flex text-white hover:bg-white/20">
               <Heart className="h-5 w-5" />
             </Button>
 
-            <CartDrawer>
-              <Button variant="ghost" size="icon" className="relative">
+            <Link href="/cart">
+              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/20">
                 <ShoppingCart className="h-5 w-5" />
                 {itemCount > 0 && (
                   <Badge
@@ -71,14 +70,21 @@ export function Header() {
                   </Badge>
                 )}
               </Button>
-            </CartDrawer>
+            </Link>
 
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
+            <Link href="/login">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                <User className="h-5 w-5" />
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-white hover:bg-white/20"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -86,27 +92,27 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t py-4">
+          <div className="md:hidden border-t border-white/20 py-4 bg-black/20 backdrop-blur-sm">
             <nav className="flex flex-col space-y-4">
-              <Link href="/" className="text-foreground hover:text-primary transition-colors">
+              <Link href="/" className="text-white/90 hover:text-white transition-colors font-medium">
                 Accueil
               </Link>
-              <Link href="/sneakers" className="text-foreground hover:text-primary transition-colors">
-                Sneakers
+              <Link href="/femme" className="text-white/90 hover:text-white transition-colors font-medium">
+                Femme
               </Link>
-              <Link href="/brands" className="text-foreground hover:text-primary transition-colors">
-                Marques
+              <Link href="/homme" className="text-white/90 hover:text-white transition-colors font-medium">
+                Homme
               </Link>
-              <Link href="/new" className="text-foreground hover:text-primary transition-colors">
-                Nouveautés
-              </Link>
-              <Link href="/sale" className="text-foreground hover:text-primary transition-colors">
+              <Link href="/promotions" className="text-white/90 hover:text-white transition-colors font-medium">
                 Promotions
               </Link>
-              <div className="pt-4 border-t">
+              <div className="pt-4 border-t border-white/20">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input placeholder="Rechercher des sneakers..." className="pl-10" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+                  <Input
+                    placeholder="Rechercher des sneakers..."
+                    className="pl-10 bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white/70"
+                  />
                 </div>
               </div>
             </nav>

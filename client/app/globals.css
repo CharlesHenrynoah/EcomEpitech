@@ -4,76 +4,77 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color palette for sneaker boutique with electric orange primary and neon accents */
-  --background: oklch(1 0 0); /* Pure white */
-  --foreground: oklch(0.15 0 0); /* Very dark gray for text - improved contrast */
-  --card: oklch(0.98 0 0); /* Light gray for cards */
-  --card-foreground: oklch(0.2 0 0); /* Dark text on cards - improved contrast */
-  --popover: oklch(1 0 0); /* White popover background */
-  --popover-foreground: oklch(0.15 0 0); /* Dark text in popovers - improved contrast */
-  --primary: oklch(0.65 0.25 45); /* Electric orange for vibrant energy */
-  --primary-foreground: oklch(0.05 0 0); /* Very dark text on primary - improved contrast */
-  --secondary: oklch(0.95 0 0); /* Very light gray for secondary elements */
-  --secondary-foreground: oklch(0.15 0 0); /* Dark text on secondary - improved contrast */
-  --muted: oklch(0.98 0.02 45); /* Very light orange tint */
-  --muted-foreground: oklch(0.35 0 0); /* Medium gray for muted text - improved contrast */
-  --accent: oklch(0.7 0.3 320); /* Hot pink accent for energy */
-  --accent-foreground: oklch(0.05 0 0); /* Very dark text on accent - improved contrast */
-  --destructive: oklch(0.6 0.25 15); /* Bright red for errors */
-  --destructive-foreground: oklch(0.98 0 0); /* White text on destructive */
-  --border: oklch(0.88 0 0); /* Light gray borders */
-  --input: oklch(0.97 0 0); /* Very light background for inputs */
-  --ring: oklch(0.65 0.25 45 / 0.6); /* Semi-transparent orange ring */
-  --chart-1: oklch(0.7 0.3 320); /* Hot pink */
-  --chart-2: oklch(0.65 0.25 45); /* Electric orange */
-  --chart-3: oklch(0.6 0.3 200); /* Cyan blue */
-  --chart-4: oklch(0.75 0.25 280); /* Electric purple */
-  --chart-5: oklch(0.7 0.3 120); /* Lime green */
-  --radius: 0.75rem; /* Slightly larger radius for modern look */
-  --sidebar: oklch(1 0 0); /* White sidebar */
-  --sidebar-foreground: oklch(0.15 0 0); /* Dark sidebar text - improved contrast */
-  --sidebar-primary: oklch(0.95 0 0); /* Light gray sidebar primary */
-  --sidebar-primary-foreground: oklch(0.15 0 0); /* Dark text on sidebar primary - improved contrast */
-  --sidebar-accent: oklch(0.7 0.3 320); /* Hot pink sidebar accent */
-  --sidebar-accent-foreground: oklch(0.05 0 0); /* Very dark text on sidebar accent - improved contrast */
-  --sidebar-border: oklch(0.88 0 0); /* Light gray sidebar borders */
-  --sidebar-ring: oklch(0.7 0.3 320 / 0.6); /* Semi-transparent pink ring */
+  /* SneakStreet vibrant purple/pink palette */
+  --background: #ffffff; /* Pure white background */
+  --foreground: #4b5563; /* Dark gray for main text */
+  --card: #f9f9f9; /* Light gray for product cards */
+  --card-foreground: #432ec6; /* Dark purple text on cards */
+  --popover: #7cc3eb; /* Soft blue for popovers */
+  --popover-foreground: #ffffff; /* White text in popovers */
+  --primary: #432ec6; /* Dark purple for primary elements */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #855ab4; /* Medium purple for secondary elements */
+  --secondary-foreground: #ffffff; /* White text on secondary */
+  --muted: #f9f9f9; /* Light gray for muted backgrounds */
+  --muted-foreground: #4b5563; /* Dark gray for muted text */
+  --accent: #db42c1; /* Vibrant pink for accents */
+  --accent-foreground: #ffffff; /* White text on accent */
+  --destructive: #c53030; /* Red for errors */
+  --destructive-foreground: #ffffff; /* White text on destructive */
+  --border: #e5e7eb; /* Light gray borders */
+  --input: #f9f9f9; /* Light gray input background */
+  --ring: rgba(66, 46, 198, 0.5); /* Dark purple focus ring */
+  --chart-1: #ae96b7; /* Light purple */
+  --chart-2: #855ab4; /* Medium purple */
+  --chart-3: #432ec6; /* Dark purple */
+  --chart-4: #db42c1; /* Vibrant pink */
+  --chart-5: #7cc3eb; /* Soft blue */
+  --radius: 0.5rem; /* Moderate radius for modern look */
+  --sidebar: #f9f9f9; /* Light gray sidebar */
+  --sidebar-foreground: #4b5563; /* Dark gray sidebar text */
+  --sidebar-primary: #855ab4; /* Medium purple sidebar primary */
+  --sidebar-primary-foreground: #ffffff; /* White text on sidebar primary */
+  --sidebar-accent: #db42c1; /* Pink sidebar accent */
+  --sidebar-accent-foreground: #ffffff; /* White text on sidebar accent */
+  --sidebar-border: #e5e7eb; /* Light gray sidebar borders */
+  --sidebar-ring: rgba(66, 46, 198, 0.5); /* Dark purple focus ring */
 }
 
 .dark {
-  /* Dark mode colors with vibrant neon palette */
-  --background: oklch(0.05 0 0); /* Very dark background */
-  --foreground: oklch(0.98 0 0); /* Bright white text */
-  --card: oklch(0.08 0 0); /* Dark card background */
-  --card-foreground: oklch(0.98 0 0); /* Bright text on cards */
-  --popover: oklch(0.05 0 0); /* Dark popover */
-  --popover-foreground: oklch(0.98 0 0); /* Bright text in popovers */
-  --primary: oklch(0.7 0.3 45); /* Brighter electric orange for dark mode */
-  --primary-foreground: oklch(0.05 0 0); /* Dark text on primary */
-  --secondary: oklch(0.12 0 0); /* Dark gray secondary */
-  --secondary-foreground: oklch(0.98 0 0); /* Bright text on secondary */
-  --muted: oklch(0.12 0 0); /* Dark muted background */
-  --muted-foreground: oklch(0.75 0 0); /* Light muted text */
-  --accent: oklch(0.75 0.35 320); /* Neon hot pink accent */
-  --accent-foreground: oklch(0.05 0 0); /* Dark text on accent */
-  --destructive: oklch(0.65 0.3 15); /* Bright neon red */
-  --destructive-foreground: oklch(0.98 0 0); /* Bright text on destructive */
-  --border: oklch(0.18 0 0); /* Dark borders */
-  --input: oklch(0.12 0 0); /* Dark input background */
-  --ring: oklch(0.7 0.3 45 / 0.7); /* Semi-transparent bright orange ring */
-  --chart-1: oklch(0.75 0.35 320); /* Neon pink */
-  --chart-2: oklch(0.7 0.3 45); /* Electric orange */
-  --chart-3: oklch(0.65 0.35 200); /* Neon cyan */
-  --chart-4: oklch(0.8 0.3 280); /* Electric purple */
-  --chart-5: oklch(0.75 0.35 120); /* Neon lime */
-  --sidebar: oklch(0.08 0 0); /* Dark sidebar */
-  --sidebar-foreground: oklch(0.98 0 0); /* Bright sidebar text */
-  --sidebar-primary: oklch(0.7 0.3 45); /* Orange sidebar primary */
-  --sidebar-primary-foreground: oklch(0.05 0 0); /* Dark text on sidebar primary */
-  --sidebar-accent: oklch(0.12 0 0); /* Dark sidebar accent */
-  --sidebar-accent-foreground: oklch(0.98 0 0); /* Bright text on sidebar accent */
-  --sidebar-border: oklch(0.18 0 0); /* Dark sidebar borders */
-  --sidebar-ring: oklch(0.75 0.35 320 / 0.7); /* Semi-transparent pink ring */
+  /* Dark mode with purple/pink theme */
+  --background: #1a1625; /* Very dark purple background */
+  --foreground: #f1f5f9; /* Light text */
+  --card: #2d1b3d; /* Dark purple card background */
+  --card-foreground: #ae96b7; /* Light purple text on cards */
+  --popover: #1a1625; /* Dark purple popover */
+  --popover-foreground: #f1f5f9; /* Light text in popovers */
+  --primary: #432ec6; /* Dark purple primary */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #855ab4; /* Medium purple secondary */
+  --secondary-foreground: #ffffff; /* White text on secondary */
+  --muted: #2d1b3d; /* Dark purple muted background */
+  --muted-foreground: #94a3b8; /* Light muted text */
+  --accent: #db42c1; /* Vibrant pink accent */
+  --accent-foreground: #ffffff; /* White text on accent */
+  --destructive: #ef4444; /* Red for errors */
+  --destructive-foreground: #ffffff; /* White text on destructive */
+  --border: #432ec6; /* Dark purple borders */
+  --input: #2d1b3d; /* Dark purple input background */
+  --ring: rgba(174, 150, 183, 0.7); /* Light purple focus ring */
+  --chart-1: #ae96b7; /* Light purple */
+  --chart-2: #855ab4; /* Medium purple */
+  --chart-3: #432ec6; /* Dark purple */
+  --chart-4: #db42c1; /* Vibrant pink */
+  --chart-5: #7cc3eb; /* Soft blue */
+  --radius: 0.5rem; /* Moderate radius for modern look */
+  --sidebar: #2d1b3d; /* Dark purple sidebar */
+  --sidebar-foreground: #f1f5f9; /* Light sidebar text */
+  --sidebar-primary: #855ab4; /* Medium purple sidebar primary */
+  --sidebar-primary-foreground: #ffffff; /* White text on sidebar primary */
+  --sidebar-accent: #db42c1; /* Pink sidebar accent */
+  --sidebar-accent-foreground: #ffffff; /* White text on sidebar accent */
+  --sidebar-border: #432ec6; /* Dark purple sidebar borders */
+  --sidebar-ring: rgba(174, 150, 183, 0.7); /* Light purple focus ring */
 }
 
 @theme inline {
@@ -124,4 +125,85 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom animations for SneakStreet */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(219, 66, 193, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(219, 66, 193, 0.6);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.3) rotate(-10deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) rotate(5deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(219, 66, 193, 0.4);
 }
