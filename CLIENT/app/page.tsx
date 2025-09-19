@@ -8,13 +8,16 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, ArrowRight, Truck, Shield, RotateCcw, Zap, Sparkles, TrendingUp } from "lucide-react"
 import { sneakers } from "@/lib/data"
+  import { supabaseClient } from "@/lib/supabaseClient";
 
-export default function HomePage() {
+export default async function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
 
-  const filteredSneakers =
-    selectedCategory === "all" ? sneakers : sneakers.filter((sneaker) => sneaker.category === selectedCategory)
 
+
+
+  const { data: products } = await supabaseClient.from('products').select()
+ console.log( "products", products)
   const trendingSneakers = sneakers.filter((sneaker) => sneaker.isNew).slice(0, 6)
   const mostWantedSneakers = sneakers.filter((sneaker) => sneaker.isBestSeller).slice(0, 8)
 
