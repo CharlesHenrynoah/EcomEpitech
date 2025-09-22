@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "EcomEpitech",
+			"path": "../../ECOM2/EcomEpitech"
+		},
+		{
+			"name": "ADMIN2",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
