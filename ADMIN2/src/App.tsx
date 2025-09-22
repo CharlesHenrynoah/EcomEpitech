@@ -55,13 +55,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Placeholder pages for remaining routes
-const Scraper = () => (
-  <div className="animate-fade-in">
-    <h1 className="text-3xl font-bold">Scraper</h1>
-    <p className="text-muted-foreground mt-2">Gestion du scraper - À venir</p>
-  </div>
-);
+// Placeholder removed: Scraper page now implemented
 
 
 
@@ -120,13 +114,7 @@ const App = () => (
                 </ProtectedRoute>
               </ProtectedLayout>
             } />
-            <Route path="/scraper" element={
-              <ProtectedLayout>
-                <ProtectedRoute requiredPage="/scraper">
-                  <Scraper />
-                </ProtectedRoute>
-              </ProtectedLayout>
-            } />
+            {/* Scraper route removed */}
             <Route path="/account-management" element={
               <ProtectedLayout>
                 <ProtectedRoute requiredPage="/account-management">

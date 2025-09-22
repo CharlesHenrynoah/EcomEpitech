@@ -29,7 +29,7 @@ export function usePermissions(): Permission {
       '/categories': ['admin', 'moderator'],
       '/customers': ['admin', 'moderator'],
       '/orders': ['admin', 'moderator'],
-      '/scraper': ['admin', 'moderator'],
+      // '/scraper': ['admin', 'moderator'], // Scraper retiré
       '/legal': ['admin'],
       '/logs': ['admin'],
       '/account-management': ['admin'],

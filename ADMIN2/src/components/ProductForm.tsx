@@ -71,6 +71,8 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       brand: productToEdit?.brand || '',
       model_name: productToEdit?.model_name || '',
@@ -137,11 +139,17 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
   };
 
   const updateVariant = (index: number, field: keyof ProductVariant, value: string | number) => {
-    // Validation pour les tailles (uniquement des chiffres)
+    // Autoriser tailles entières ou décimales (ex: 44, 44.0, 44.5)
     if (field === 'size' && typeof value === 'string') {
-      const numericValue = value.replace(/[^0-9]/g, '');
+      // Garder chiffres et un seul point
+      let sanitized = value.replace(/[^0-9.]/g, '');
+      const firstDot = sanitized.indexOf('.');
+      if (firstDot !== -1) {
+        // retirer points supplémentaires
+        sanitized = sanitized.slice(0, firstDot + 1) + sanitized.slice(firstDot + 1).replace(/\./g, '');
+      }
       const updatedVariants = [...variants];
-      updatedVariants[index] = { ...updatedVariants[index], [field]: numericValue };
+      updatedVariants[index] = { ...updatedVariants[index], [field]: sanitized };
       setVariants(updatedVariants);
     } else {
       const updatedVariants = [...variants];
@@ -152,18 +160,18 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
 
   // Fonction pour vérifier si les variantes sont valides
   const hasValidVariants = () => {
-    return variants.some(v => v.size.trim() !== '' && /^\d+$/.test(v.size));
+    return variants.some(v => v.size.trim() !== '' && /^\d+(?:\.\d+)?$/.test(v.size));
   };
 
   // Vérifier si le formulaire est valide
-  const isFormValid = form.formState.isValid && hasValidVariants();
+  const isFormValid = form.formState.isValid && hasValidVariants() && !isSubmitting;
 
   const onSubmit = async (data: ProductFormData) => {
     try {
       setIsSubmitting(true);
       
-      // Validate variants (tailles doivent être des chiffres)
-      const validVariants = variants.filter(v => v.size.trim() !== '' && /^\d+$/.test(v.size));
+      // Validate variants (tailles numériques entières ou décimales)
+      const validVariants = variants.filter(v => v.size.trim() !== '' && /^\d+(?:\.\d+)?$/.test(v.size));
       if (validVariants.length === 0) {
         toast({
           title: "Erreur",
@@ -488,7 +496,7 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
               {variants.map((variant, index) => (
                 <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
                   <div className="flex-1">
-                    <Label>Taille (chiffres uniquement)</Label>
+                    <Label>Taille (ex: 44, 44.5)</Label>
                     <Input
                       value={variant.size}
                       onChange={(e) => updateVariant(index, 'size', e.target.value)}
@@ -575,7 +583,7 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
               <Button type="button" variant="outline" onClick={handleClose}>
                 Annuler
               </Button>
-              <Button type="submit" disabled={isSubmitting || !isFormValid}>
+              <Button type="submit" disabled={!isFormValid}>
                 {isSubmitting ? 
                   (isEditing ? 'Modification en cours...' : 'Création en cours...') : 
                   (isEditing ? 'Modifier le produit' : 'Créer le produit')
