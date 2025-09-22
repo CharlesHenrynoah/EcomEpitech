@@ -5,8 +5,10 @@ import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useDashboard } from '@/hooks/useDashboard';
+import { GenderDistributionChart } from '@/components/dashboard/GenderDistributionChart';
 import { useState, useEffect } from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+import { supabase } from '@/integrations/supabase/client';
 const Dashboard = () => {
   const {
     stats,
@@ -14,7 +16,8 @@ const Dashboard = () => {
     error,
     fetchSalesData,
     fetchTopProducts,
-    fetchCategoriesDistribution
+    fetchCategoriesDistribution,
+    refetch
   } = useDashboard();
   const [salesData, setSalesData] = useState<any[]>([]);
   const [topProducts, setTopProducts] = useState<any[]>([]);
@@ -53,7 +56,58 @@ const Dashboard = () => {
     if (!loading) {
       loadChartData();
     }
+    // Realtime: mettre à jour dès qu'une table clé change
+    const channel = supabase.channel('dashboard-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
+        refetch();
+        loadChartData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'order_items' }, () => {
+        loadChartData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+        refetch();
+        loadChartData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'product_variants' }, () => {
+        refetch();
+        loadChartData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
+        loadChartData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [loading, fetchSalesData, fetchTopProducts, fetchCategoriesDistribution]);
+
+  const manualRefresh = async () => {
+    refetch();
+    try {
+      const [sales, products, categories] = await Promise.all([fetchSalesData(7), fetchTopProducts(5), fetchCategoriesDistribution()]);
+      const formattedSales = sales.map((item, index) => ({
+        name: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'][index] || `J${index + 1}`,
+        value: Math.round(item.revenue),
+        orders: item.orders
+      }));
+      setSalesData(formattedSales);
+      const totalQuantity = products.reduce((sum, p) => sum + p.total_quantity, 0);
+      const colors = ['hsl(var(--primary))', 'hsl(var(--info))', 'hsl(var(--success))', 'hsl(var(--warning))', 'hsl(var(--muted))'];
+      const formattedProducts = products.map((product, index) => ({
+        name: product.name,
+        value: totalQuantity > 0 ? Math.round(product.total_quantity / totalQuantity * 100) : 0,
+        quantity: product.total_quantity,
+        revenue: product.total_revenue,
+        color: colors[index] || 'hsl(var(--muted))'
+      }));
+      setTopProducts(formattedProducts);
+      setCategoriesData(categories);
+    } catch (err) {
+      console.error('Error refreshing charts:', err);
+    }
+  };
   const exportToCSV = () => {
     // Prepare CSV data
     const csvData = [];
@@ -181,6 +235,7 @@ const Dashboard = () => {
         
         {/* Quick Actions */}
         <div className="flex gap-2">
+          <Button onClick={manualRefresh} variant="outline">Actualiser</Button>
           <Button onClick={exportToCSV} className="gap-2">
             <Download className="h-4 w-4" />
             Exporter CSV
@@ -343,6 +398,9 @@ const Dashboard = () => {
             </div>
           </div>
         </Card>
+
+        {/* Gender Distribution Chart */}
+        <GenderDistributionChart />
       </div>
     </div>;
 };

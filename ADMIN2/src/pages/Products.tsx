@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Filter, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Search, Filter, Plus, Edit, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -18,44 +18,33 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { ProductForm } from '@/components/ProductForm';
 import { ProductDetailDialog } from '@/components/ProductDetailDialog';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
-import { useToast } from '@/hooks/use-toast';
-import { Product } from '@/types/database';
+import { Product, GenderEnum } from '@/types/database';
 
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedGender, setSelectedGender] = useState<'all' | GenderEnum>('all');
   const [showProductForm, setShowProductForm] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [productToView, setProductToView] = useState<Product | null>(null);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [showDetailDialog, setShowDetailDialog] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   
   const { products, loading, deleteProduct } = useProducts({
     search: searchQuery,
     category_id: selectedCategory === 'all' ? undefined : selectedCategory,
+    gender: selectedGender === 'all' ? undefined : selectedGender,
   });
   const { categories } = useCategories();
-  const { toast } = useToast();
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = `${product.brand} ${product.model_name}`.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category_id === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesGender = selectedGender === 'all' || product.gender === selectedGender;
+    return matchesSearch && matchesCategory && matchesGender;
   });
 
   const getStockStatus = (variants: any[]) => {
@@ -75,30 +64,9 @@ const Products = () => {
     setShowProductForm(true);
   };
 
-  const handleDeleteProduct = (product: Product) => {
-    setProductToDelete(product);
-    setShowDeleteDialog(true);
-  };
+  // Suppression désactivée : pas de handler
 
-  const confirmDelete = async () => {
-    if (productToDelete) {
-      try {
-        await deleteProduct(productToDelete.id);
-        toast({
-          title: "Succès",
-          description: "Produit supprimé avec succès",
-        });
-      } catch (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de supprimer le produit",
-          variant: "destructive",
-        });
-      }
-    }
-    setShowDeleteDialog(false);
-    setProductToDelete(null);
-  };
+  // Suppression désactivée : pas de confirmation
 
   const handleCloseProductForm = (open: boolean) => {
     setShowProductForm(open);
@@ -156,6 +124,24 @@ const Products = () => {
                   {category.name}
                 </DropdownMenuItem>
               ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Genre
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setSelectedGender('all')}>
+                Tous les genres
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedGender('homme')}>Homme</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedGender('femme')}>Femme</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedGender('enfant')}>Enfant</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedGender('unisexe')}>Unisexe</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           
@@ -239,15 +225,7 @@ const Products = () => {
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => handleDeleteProduct(product)}
-                          title="Supprimer"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        {/* Bouton Supprimer retiré */}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -272,28 +250,7 @@ const Products = () => {
         onOpenChange={setShowDetailDialog}
       />
 
-      {/* Delete Confirmation Modal */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
-            <AlertDialogDescription>
-              Êtes-vous sûr de vouloir supprimer le produit "{productToDelete?.brand} {productToDelete?.model_name}" ?
-              Cette action est irréversible et supprimera également toutes les variantes, 
-              images et avis associés.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Supprimer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Suppression désactivée : pas de modal de confirmation */}
     </div>
   );
 };

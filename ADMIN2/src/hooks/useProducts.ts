@@ -134,12 +134,43 @@ export const useProducts = (filters?: ProductFilters) => {
 
   const deleteProduct = async (id: string) => {
     try {
-      const { error } = await supabase
+      // 1) Vérifier si le produit est lié à des commandes (order_items)
+      const { count: orderItemsCount, error: orderItemsError } = await supabase
+        .from('order_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('product_id', id);
+
+      if (orderItemsError) throw orderItemsError;
+      if ((orderItemsCount ?? 0) > 0) {
+        toast({
+          title: "Suppression impossible",
+          description: "Ce produit est lié à au moins une commande. Pour préserver l'historique, la suppression est bloquée.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // 2) Supprimer d'abord les dépendances qui créent des FKs
+      // Ordre important: cart_items (réf. product_id/variant_id) -> images/reviews -> variants
+      const deletions = [
+        supabase.from('cart_items').delete().eq('product_id', id),
+        supabase.from('product_images').delete().eq('product_id', id),
+        supabase.from('reviews').delete().eq('product_id', id),
+        supabase.from('product_variants').delete().eq('product_id', id),
+      ];
+
+      for (const deletion of deletions) {
+        const { error: delError } = await deletion;
+        if (delError) throw delError;
+      }
+
+      // 3) Supprimer le produit
+      const { error: productDeleteError } = await supabase
         .from('products')
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (productDeleteError) throw productDeleteError;
 
       toast({
         title: "Succès",
@@ -148,9 +179,13 @@ export const useProducts = (filters?: ProductFilters) => {
 
       fetchProducts();
     } catch (err) {
+      const message = err instanceof Error ? err.message : 'Impossible de supprimer le produit';
+      const isFkConflict = typeof err === 'object' && err !== null && 'message' in (err as any)
+        ? String((err as any).message).toLowerCase().includes('foreign key') || String((err as any).message).includes('violates foreign key')
+        : false;
       toast({
         title: "Erreur",
-        description: "Impossible de supprimer le produit",
+        description: isFkConflict ? "Conflit de clés étrangères. Supprimez d'abord les éléments liés ou utilisez l'archivage." : message,
         variant: "destructive",
       });
       throw err;

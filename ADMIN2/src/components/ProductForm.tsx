@@ -64,7 +64,7 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { categories } = useCategories();
-  const { createProduct, updateProduct } = useProducts();
+  const { createProduct, updateProduct, refetch } = useProducts();
   const { toast } = useToast();
   
   const isEditing = !!productToEdit;
@@ -199,8 +199,21 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
 
         if (updatedProduct) {
           // Delete existing variants and images, then recreate them
-          await supabase.from('product_variants').delete().eq('product_id', productToEdit.id);
-          await supabase.from('product_images').delete().eq('product_id', productToEdit.id);
+          const { error: deleteVariantsError } = await supabase
+            .from('product_variants')
+            .delete()
+            .eq('product_id', productToEdit.id);
+          if (deleteVariantsError) {
+            throw new Error(`Erreur lors de la suppression des variantes: ${deleteVariantsError.message}`);
+          }
+
+          const { error: deleteImagesError } = await supabase
+            .from('product_images')
+            .delete()
+            .eq('product_id', productToEdit.id);
+          if (deleteImagesError) {
+            throw new Error(`Erreur lors de la suppression des images: ${deleteImagesError.message}`);
+          }
           
           const productId = productToEdit.id;
           
@@ -233,6 +246,9 @@ export function ProductForm({ open, onOpenChange, productToEdit }: ProductFormPr
               throw new Error(`Erreur lors de la mise à jour de l'image: ${error.message}`);
             }
           }
+
+          // Forcer un rafraîchissement pour refléter la nouvelle liste d'images
+          await refetch();
         }
       } else {
         // Create new product
