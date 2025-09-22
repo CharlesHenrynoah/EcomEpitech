@@ -35,11 +35,6 @@ const navigationItems = [{
   icon: ShoppingCart,
   roles: ['admin', 'moderator']
 }, {
-  title: 'Scraper',
-  url: '/scraper',
-  icon: Bot,
-  roles: ['admin', 'moderator']
-}, {
   title: 'Mon Compte',
   url: '/profile',
   icon: User,

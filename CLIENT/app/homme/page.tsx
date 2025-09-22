@@ -31,6 +31,7 @@ async function getProducts() {
 
 export default async function HommePage() {
   const products = await getProducts()
+  console.log("products", products)
 
   return (
     <div className="min-h-screen bg-background">
