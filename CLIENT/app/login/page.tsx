@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from "lucide-react"
 import { supabaseClient } from "@/lib/supabaseClient"
-import bcrypt from "bcryptjs"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -26,9 +25,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const router = useRouter()
-  const supabase = supabaseClient
 
-  // gestion du formulaire
+  // gestion des champs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
@@ -44,20 +42,18 @@ export default function LoginPage() {
     setError("")
 
     try {
-      // récupérer l’utilisateur par email
-      const { data: user, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("email", formData.email)
-        .single()
+      const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-      if (error || !user) throw new Error("Utilisateur introuvable")
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
 
-      // comparer mot de passe
-      const isValid = await bcrypt.compare(formData.password, user.password)
-      if (!isValid) throw new Error("Mot de passe incorrect")
-
-      // ✅ Connexion réussie
       router.push("/")
       router.refresh()
     } catch (err: any) {
@@ -86,26 +82,20 @@ export default function LoginPage() {
     }
 
     try {
-      // hash du mot de passe
-      const hashedPassword = await bcrypt.hash(formData.password, 10)
+      const res = await fetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+        }),
+      })
 
-      // insérer dans la table users
-      const { data, error } = await supabase
-        .from("users")
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            password: hashedPassword,
-          },
-        ])
-        .select()
-        .single()
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
 
-      if (error) throw error
-
-      // ✅ Redirection
       router.push("/")
       router.refresh()
     } catch (err: any) {
@@ -120,7 +110,7 @@ export default function LoginPage() {
     setLoading(true)
     setError("")
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabaseClient.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
@@ -147,7 +137,9 @@ export default function LoginPage() {
             <div className="mx-auto h-12 w-12 rounded-full bg-white/20 flex items-center justify-center mb-4">
               <User className="h-6 w-6 text-white" />
             </div>
-            <CardTitle className="text-2xl font-bold text-white">{isLogin ? "Connexion" : "Inscription"}</CardTitle>
+            <CardTitle className="text-2xl font-bold text-white">
+              {isLogin ? "Connexion" : "Inscription"}
+            </CardTitle>
             <CardDescription className="text-white/70">
               {isLogin ? "Connectez-vous à votre compte SneakStreet" : "Créez votre compte SneakStreet"}
             </CardDescription>
