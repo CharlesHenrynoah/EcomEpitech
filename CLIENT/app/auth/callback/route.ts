@@ -1,5 +1,8 @@
-import { supabaseClient } from "@/lib/supabaseClient"
-import { type NextRequest, NextResponse } from "next/server"
+import { cookies } from "next/headers"
+import { NextRequest, NextResponse } from "next/server"
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
+
+export const dynamic = "force-dynamic" // ⚡ évite l'erreur au build
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -7,13 +10,14 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next") ?? "/"
 
   if (code) {
-    const supabase = supabaseClient
+    const supabase = createRouteHandlerClient({ cookies })
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
 
-  // Return the user to an error page with instructions
+  // redirection en cas d’échec
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 }
