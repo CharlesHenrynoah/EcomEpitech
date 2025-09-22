@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-export const dynamic = "force-dynamic"; // 🔥 très important
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
@@ -12,15 +11,11 @@ export async function POST(req: Request) {
       .from("users")
       .select("*")
       .eq("email", email)
+      .eq("password", password) // ⚠️ comparaison directe (pas sécurisé)
       .single();
 
     if (error || !user) {
-      return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 400 });
-    }
-
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-      return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
+      return NextResponse.json({ error: "Email ou mot de passe incorrect" }, { status: 400 });
     }
 
     return NextResponse.json({ user }, { status: 200 });
