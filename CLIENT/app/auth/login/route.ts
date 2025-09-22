@@ -1,33 +1,28 @@
-import { NextResponse } from "next/server"
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
-import bcrypt from "bcryptjs"
-
-export const dynamic = "force-dynamic"
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json()
+    const { email, password } = await req.json();
 
-    const supabase = createRouteHandlerClient({ cookies })
-
-    const { data: user, error } = await supabase
+    const { data: user, error } = await supabaseServer
       .from("users")
       .select("*")
       .eq("email", email)
-      .single()
+      .single();
 
     if (error || !user) {
-      return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 400 })
+      return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 400 });
     }
 
-    const isValid = await bcrypt.compare(password, user.password)
+    const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 })
+      return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
     }
 
-    return NextResponse.json({ user })
+    return NextResponse.json({ user }, { status: 200 });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
