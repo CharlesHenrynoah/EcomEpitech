@@ -1,6 +1,3 @@
-"use client"
-
-import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -8,15 +5,29 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, ArrowRight, Truck, Shield, RotateCcw, Zap, Sparkles, TrendingUp } from "lucide-react"
 import { sneakers } from "@/lib/data"
-  import { supabaseClient } from "@/lib/supabaseClient";
+import { Product } from "@/lib/supabaseClient"
+import { supabaseServer } from "@/lib/supabaseServer"
+
+async function getProducts() {
+  if (!supabaseServer) {
+    console.error("Supabase server client is not configured. Check environment variables.")
+    return [] as Product[]
+  }
+
+  const { data, error } = await supabaseServer.from("products").select("*").limit(50)
+
+  if (error) {
+    console.error("Error fetching home products:", error)
+    return [] as Product[]
+  }
+
+  return (data ?? []) as Product[]
+}
 
 export default async function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
+  const products = await getProducts()
+  const productCount = products.length
 
-
-
-
-  const { data: products } = await supabaseClient.from('products').select()
   const trendingSneakers = sneakers.filter((sneaker) => sneaker.isNew).slice(0, 6)
   const mostWantedSneakers = sneakers.filter((sneaker) => sneaker.isBestSeller).slice(0, 8)
 
@@ -43,6 +54,11 @@ export default async function HomePage() {
                 <p className="text-xl text-white/90 max-w-lg font-medium">
                   🔥 La révolution sneakers commence ici. Style urbain, tech premium, authenticité 100% garantie.
                 </p>
+                {productCount > 0 && (
+                  <p className="text-sm text-white/70 max-w-md">
+                    🎯 {productCount}+ modèles disponibles en exclusivité cette semaine.
+                  </p>
+                )}
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
