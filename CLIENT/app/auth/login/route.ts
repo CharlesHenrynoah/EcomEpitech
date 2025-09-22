@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
+export const dynamic = "force-dynamic"; // 🔥 très important
+
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
