@@ -3,7 +3,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Heart, Star, ChevronDown, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
-  import { Product, supabaseClient } from "@/lib/supabaseClient";
+import { Product } from "@/lib/supabaseClient"
+import { supabaseServer } from "@/lib/supabaseServer"
+
+export const dynamic = "force-dynamic";
 
 const filters = [
   { name: "Trier par", options: ["Prix croissant", "Prix décroissant", "Nouveautés", "Popularité"] },
@@ -19,7 +22,12 @@ const filters = [
 ]
 
 async function getProducts() {
-  const { data: products, error } = await supabaseClient.from("products").select("*").eq("gender", "homme")
+  if (!supabaseServer) {
+    console.error("Supabase server client is not configured. Check environment variables.")
+    return []
+  }
+
+  const { data: products, error } = await supabaseServer.from("products").select("*").eq("gender", "homme")
 
   if (error) {
     console.error("Error fetching products:", error)
@@ -123,7 +131,7 @@ export default async function HommePage() {
 
                       <div className="flex items-center gap-2">
                         {/* {product.discount && <span className="text-sm text-orange-500 font-medium">À partir de</span>} */}
-                        <span className="font-bold text-foreground">{product.price.toFixed(2)} €</span>
+                        <span className="font-bold text-foreground">{Number(product.price).toFixed(2)} €</span>
                         {/* {product.originalPrice && (
                           <>
                             <span className="text-sm text-muted-foreground line-through">

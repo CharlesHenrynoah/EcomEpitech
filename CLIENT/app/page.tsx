@@ -17,7 +17,6 @@ export default async function HomePage() {
 
 
   const { data: products } = await supabaseClient.from('products').select()
- console.log( "products", products)
   const trendingSneakers = sneakers.filter((sneaker) => sneaker.isNew).slice(0, 6)
   const mostWantedSneakers = sneakers.filter((sneaker) => sneaker.isBestSeller).slice(0, 8)
 
