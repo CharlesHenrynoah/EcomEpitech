@@ -133,9 +133,8 @@ Ces hooks gèrent :
 ### Installation
 
 ```bash
-bun install   # ou npm install
-Lancement
-bash
-Copier le code
-bun run dev   # ou npm run dev
+#Installation
+npm install
+#Run du code
+npm run dev
 ```
