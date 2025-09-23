@@ -8,10 +8,6 @@ Back-office React pour la gestion e-commerce, construit avec **Vite**, **TypeScr
 
 Le back-office **Admin** est une application **Vite/React** en **TypeScript**, stylisée avec **Tailwind CSS** et la librairie **shadcn-ui**, et connectée à **Supabase** pour l’authentification et la persistance des données.
 
----
-
-markdown
-Copier le code
 
 ---
 
