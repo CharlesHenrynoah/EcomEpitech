@@ -10,20 +10,6 @@ Le back-office **Admin** est une application **Vite/React** en **TypeScript**, s
 
 ---
 
-## 📁 Structure principale
-
-src/
-├── App.tsx # Routage principal et providers globaux
-├── main.tsx # Point d’entrée de l’application
-├── pages/ # Pages métiers (Dashboard, Produits, etc.)
-├── components/ # Composants UI génériques
-├── contexts/ # Contexts React (Auth, etc.)
-├── hooks/ # Hooks métiers pour les appels Supabase
-├── integrations/ # Client Supabase
-├── types/ # Typage Supabase (via introspection DB)
-├── lib/ # Fonctions utilitaires
-└── index.css # Feuille de style principale
-
 markdown
 Copier le code
 
